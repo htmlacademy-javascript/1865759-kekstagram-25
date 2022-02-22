@@ -10,9 +10,7 @@ const randomNumber = (max, min) => {
   return false;
 };
 
-const checkStringLength = (str, max) => {
-  if (typeof (str) === 'string' && str.length <= max) {
-    return true;
-  }
-  return false;
-};
+const checkStringLength = (str, max) => typeof (str) === 'string' && str.length <= max;
+
+randomNumber(1,5);
+checkStringLength (1,10);
