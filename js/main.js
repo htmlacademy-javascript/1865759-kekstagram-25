@@ -33,10 +33,6 @@ const NAMES = [
 ];
 
 const getTestComments = (value) =>({
-  id: value,
-  avatar: `img/avatar-${  getRandomPositiveInteger(1,6) }.svg`,
-  message: getRandomArrayElement(MESSAGES),
-  userName: getRandomArrayElement(NAMES),
 });
 
 const getTestPost = (value) => ({
