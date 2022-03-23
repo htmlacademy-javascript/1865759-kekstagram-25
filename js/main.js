@@ -1,5 +1,2 @@
-import {getTestPost} from './get-post.js';
-const getTestPosts =  Array.from({length: 25}, (v,i) => getTestPost(i+1));
+import './picture.js';
 
-// eslint-disable-next-line no-console
-console.log(getTestPosts);
