@@ -7,6 +7,7 @@ const showPictureTemplate = document.querySelector('#picture')
 
 const getTestPosts =  Array.from({length: 25}, (v,i) => getTestPost(i+1));
 
+
 getTestPosts.forEach(({url,likes,comments}) => {
   const pictureView = showPictureTemplate.cloneNode(true);
   pictureView.querySelector('.picture__img').src=url;
@@ -15,5 +16,5 @@ getTestPosts.forEach(({url,likes,comments}) => {
   showListPictures.appendChild(pictureView);
 });
 
-// eslint-disable-next-line no-undef
-showListPictures.appendChild(showListFragment);
+
+export {showPictureTemplate, getTestPosts};
