@@ -44,6 +44,8 @@ function closeFormModal() {
   document.body.classList.remove('modal-open');
   uploadOverlayForm.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscKeydown);
+  uploadForm.reset();
+  pristine.reset();
 }
 
 uploadFile.addEventListener('change', () => {
