@@ -2,14 +2,14 @@ import {MESSAGES, NAMES, DESCRIPTION} from './data.js';
 import {getRandomPositiveInteger, getRandomArrayElement } from  './util.js';
 
 const getTestComments = (commentIndex) =>({
-  id: commentIndex,
+  id: `${commentIndex}`,
   avatar: `img/avatar-${  getRandomPositiveInteger(1,6) }.svg`,
   message: getRandomArrayElement(MESSAGES),
   userName: getRandomArrayElement(NAMES),
 });
 
 const getTestPost = (postIndex) => ({
-  id: postIndex,
+  id:`${postIndex}`,
   url: `photos/${postIndex}.jpg`,
   description: getRandomArrayElement(DESCRIPTION),
   likes: getRandomPositiveInteger(15,200),

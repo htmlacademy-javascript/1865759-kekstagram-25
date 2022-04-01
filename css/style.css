@@ -1416,3 +1416,9 @@ main {
 .hidden {
   display: none;
 }
+
+.form__error {
+  display: block;
+  font-size: 0.85em;
+  color: #c00;
+}
