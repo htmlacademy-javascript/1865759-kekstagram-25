@@ -1,12 +1,16 @@
+/* eslint-disable no-use-before-define */
 import { isEscapeKey } from './util.js';
+import { resetScale } from './scale-picture.js';
+import { resetFilter } from './filters-picture.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFile = uploadForm.querySelector('#upload-file');
 const uploadOverlayForm = uploadForm.querySelector('.img-upload__overlay');
 const uploadOverlayCloseForm = uploadForm.querySelector('.img-upload__cancel');
-const imgUploadPreview = uploadForm.querySelector('.img-upload__preview').querySelector('img');
+const imgUploadPreview = uploadForm.querySelector('.img-upload__preview img');
 const uploadTextDescription = uploadForm.querySelector('.text__description');
 const uploadTexthashtags = uploadForm.querySelector('.text__hashtags');
+const imgUploadPreviewEffects = uploadForm.querySelectorAll('.effects__preview');
 
 const pristine = new Pristine(uploadForm,  {
   classTo: 'form__item',
@@ -40,19 +44,24 @@ const onFormEscKeydown = (evt) => {
   }
 };
 
-function closeFormModal() {
+const closeFormModal = () => {
   document.body.classList.remove('modal-open');
   uploadOverlayForm.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscKeydown);
   uploadForm.reset();
   pristine.reset();
-}
+};
 
 uploadFile.addEventListener('change', () => {
   document.body.classList.add('modal-open');
   uploadOverlayForm.classList.remove('hidden');
   imgUploadPreview.src = URL.createObjectURL(uploadFile.files[0]);
+  imgUploadPreviewEffects.forEach((image) => {
+    image.style.backgroundImage = `url(${imgUploadPreview.src})`;
+  });
   document.addEventListener('keydown', onFormEscKeydown);
+  resetScale();
+  resetFilter();
 });
 
 uploadOverlayCloseForm.addEventListener('click',closeFormModal);
