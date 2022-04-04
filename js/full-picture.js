@@ -1,12 +1,12 @@
 import { isEscapeKey, isEnterKey } from './util.js';
 import { getTestPosts } from './picture.js';
 
-
 const fullPicture = document.querySelector('.big-picture');
 const userModalOpenPictures = document.querySelectorAll('.picture');
 const userModalClosePicture = fullPicture.querySelector('.big-picture__cancel');
-const socialComentShowCounter = fullPicture.querySelector('.comments-show');
-const socialComentAddButton = fullPicture.querySelector('.comments-loader');
+const socialCommentShowCounter = fullPicture.querySelector('.comments-show');
+const socialCommentAddButton = fullPicture.querySelector('.comments-loader');
+let handleAddCommentsButton;
 
 const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
@@ -15,37 +15,42 @@ const onPopupEscKeydown = (evt) => {
   }
 };
 
-const generateComent = (comentDict) => {
+const generateComment = (commentDict) => {
   const comment = document.createElement('li');
   comment.classList.add('social__comment');
   comment.innerHTML = `<img class="social__picture"
-    src="${comentDict.avatar}"
-    alt="${comentDict.userName}"
+    src="${commentDict.avatar}"
+    alt="${commentDict.userName}"
     width="35" height="35">
-    <p class="social__text">${comentDict.message}</p>`;
+    <p class="social__text">${commentDict.message}</p>`;
   return comment;
 };
 
-const commetsSection = (commentsDict) => {
-  const comentsSection = fullPicture.querySelector('.social__comments');
-  comentsSection.textContent = ' ';
+const renderMoreCommentsBtn = (commentsDictCopy) => {
+  if(commentsDictCopy.length === 0){
+    socialCommentAddButton.classList.add('hidden');}
+  else{socialCommentAddButton.classList.remove('hidden');}
+};
+
+
+const renderCommetsSection = (commentsDict) => {
+  const commentsSection = fullPicture.querySelector('.social__comments');
+  commentsSection.textContent = ' ';
+  socialCommentShowCounter.textContent = '0';
   const commentsDictCopy = [...commentsDict];
   for (let i=0; i<5 && commentsDictCopy.length > 0; i++) {
-    comentsSection.appendChild(generateComent(commentsDictCopy.shift()));
-    socialComentShowCounter.textContent = i+1;
+    commentsSection.appendChild(generateComment(commentsDictCopy.shift()));
+    socialCommentShowCounter.textContent = i+1;
   }
-  if(commentsDictCopy.length === 0){
-    socialComentAddButton.classList.add('hidden');}
-  else{socialComentAddButton.classList.remove('hidden');}
-  socialComentAddButton.addEventListener('click', () =>{
+  renderMoreCommentsBtn(commentsDictCopy);
+  handleAddCommentsButton = () => {
     for (let i=0; i<5 && commentsDictCopy.length > 0; i++) {
-      comentsSection.appendChild(generateComent(commentsDictCopy.shift()));
-      socialComentShowCounter.textContent = parseInt(socialComentShowCounter.textContent, 10) + 1;
+      commentsSection.appendChild(generateComment(commentsDictCopy.shift()));
+      socialCommentShowCounter.textContent = parseInt(socialCommentShowCounter.textContent, 10) + 1;
     }
-    if(commentsDictCopy.length === 0){
-      socialComentAddButton.classList.add('hidden');}
-    else{socialComentAddButton.classList.remove('hidden');}
-  });
+    renderMoreCommentsBtn(commentsDictCopy);
+  };
+  socialCommentAddButton.addEventListener('click', handleAddCommentsButton);
 };
 
 function openUserModal(id) {
@@ -54,7 +59,7 @@ function openUserModal(id) {
   fullPicture.querySelector('.likes-count').textContent = getPost.likes;
   fullPicture.querySelector('.comments-count').textContent = getPost.comments.length;
   fullPicture.querySelector('.social__caption').textContent = getPost.description;
-  commetsSection(getPost.comments);
+  renderCommetsSection(getPost.comments);
   document.body.classList.add('modal-open');
   fullPicture.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscKeydown);
@@ -64,6 +69,7 @@ function closeUserModal() {
   document.querySelector('body').classList.remove('modal-open');
   fullPicture.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscKeydown);
+  socialCommentAddButton.removeEventListener('click', handleAddCommentsButton);
 }
 
 userModalOpenPictures.forEach((userModalOpenPicture) => {
