@@ -25,7 +25,8 @@ const resetFilter = () => {
   effectLevelSlider.classList.add('hidden');
   fieldSetEffect.classList.add('hidden');
   effectLevelValue.value = 0;
-  imageUploadPreview.class = '';
+  imageUploadPreview.classList = '';
+  imageUploadPreview.style.filter = '';
   effectsList.querySelector('#effect-none').checked = true;
 };
 
