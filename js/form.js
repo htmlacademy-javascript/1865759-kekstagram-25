@@ -2,6 +2,8 @@
 import { isEscapeKey } from './util.js';
 import { resetScale } from './scale-picture.js';
 import { resetFilter } from './filters-picture.js';
+import { sendNewPost } from './api.js';
+import { uploadMessage, uploadError } from './alert-message.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFile = uploadForm.querySelector('#upload-file');
@@ -11,6 +13,15 @@ const imgUploadPreview = uploadForm.querySelector('.img-upload__preview img');
 const uploadTextDescription = uploadForm.querySelector('.text__description');
 const uploadTexthashtags = uploadForm.querySelector('.text__hashtags');
 const imgUploadPreviewEffects = uploadForm.querySelectorAll('.effects__preview');
+const submitButton = uploadForm.querySelector('.img-upload__submit');
+
+const disableSubmitButton = () => {
+  submitButton.disabled = true;
+};
+
+const enableSubmitButton = () => {
+  submitButton.disabled = false;
+};
 
 const pristine = new Pristine(uploadForm,  {
   classTo: 'form__item',
@@ -26,7 +37,7 @@ const validateDescription = (textDescription) => textDescription.length <= 140;
 const validateHashtags = (textHashtags) => {
   const arrayHashtags = textHashtags.split(' ');
   const re = /^#[A-Za-zА-Яа-яЕё0-9]{1,19}$/;
-  return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length;
+  return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length || textHashtags.length === 0;
 };
 
 pristine.addValidator(uploadTextDescription,validateDescription,'До 140 симолов!');
@@ -34,7 +45,22 @@ pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
-  pristine.validate();
+  if (pristine.validate()){
+    disableSubmitButton();
+    sendNewPost(
+      () => {
+        enableSubmitButton();
+        closeFormModal();
+        uploadMessage();
+      },
+      () => {
+        enableSubmitButton();
+        closeFormModal();
+        uploadError();
+      },
+      new FormData(evt.target)
+    );
+  }
 });
 
 const onFormEscKeydown = (evt) => {
