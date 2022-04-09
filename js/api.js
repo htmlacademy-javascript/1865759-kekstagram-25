@@ -1,3 +1,5 @@
+import { initFilters } from './filters-posts.js';
+
 const getPostData = (onSuccess,onError) => {
   fetch('https://25.javascript.pages.academy/kekstagram/data')
     .then((response) => {
@@ -5,8 +7,11 @@ const getPostData = (onSuccess,onError) => {
         return response.json();
       }
       throw new Error(`${response.status} ${response.statusText}`);})
-    .then((getTestPosts) => {
-      onSuccess(getTestPosts);
+    .then((posts) => {
+      onSuccess(posts);
+    })
+    .then(()=>{
+      initFilters();
     })
     .catch((err) => {
       onError(err);
@@ -22,9 +27,9 @@ const sendNewPost = (onSuccess, onError, body) => {
       if (response.ok) {
         return onSuccess();
       }
-      throw '';})
-    .catch(() => {
-      onError();
+      throw new Error(`${response.status} ${response.statusText}`);})
+    .catch((err) => {
+      onError(err);
     });
 };
 export {getPostData, sendNewPost};
