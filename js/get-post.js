@@ -16,4 +16,12 @@ const getTestPost = (postIndex) => ({
   comments: Array.from({length: getRandomPositiveInteger(0,20)}, (v,i) => getTestComments((postIndex*1000)+i))
 });
 
-export {getTestPost};
+let cards = [];
+
+const initPosts = (newCards) => {
+  cards = newCards;
+};
+
+const getPosts = () => cards;
+
+export { getTestPost, getPosts, initPosts };

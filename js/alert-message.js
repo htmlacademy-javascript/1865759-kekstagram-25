@@ -61,9 +61,10 @@ function onErrorEscKeydown(evt){
   }
 }
 
-const uploadError = () => {
+const uploadError = (err) => {
   const message = errorUploadMesageTemplate.cloneNode(true);
   errorContainer = message.querySelector('.error');
+  errorContainer.querySelector('.error__title').textContent = `Ошибка загрузки файла ${err}`;
   message.querySelector('.error__button').addEventListener('click', ()=>{
     errorContainer.remove();
   });
