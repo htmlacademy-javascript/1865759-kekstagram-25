@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { isEscapeKey } from './util.js';
 import { resetScale } from './scale-picture.js';
 import { resetFilter } from './filters-picture.js';
@@ -70,13 +69,13 @@ const onFormEscKeydown = (evt) => {
   }
 };
 
-const closeFormModal = () => {
+function closeFormModal(){
   document.body.classList.remove('modal-open');
   uploadOverlayForm.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscKeydown);
   uploadForm.reset();
   pristine.reset();
-};
+}
 
 uploadFile.addEventListener('change', () => {
   document.body.classList.add('modal-open');
