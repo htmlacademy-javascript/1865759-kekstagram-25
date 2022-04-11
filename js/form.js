@@ -40,8 +40,8 @@ const validateHashtags = (textHashtags) => {
   return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length || textHashtags.length === 0;
 };
 
-pristine.addValidator(uploadTextDescription,validateDescription,'До 140 симолов!');
-pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-тегов!');
+pristine.addValidator(uploadTextDescription,validateDescription,'Комментарий до 140 симолов!');
+pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-тегов не выполнено!');
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();

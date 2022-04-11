@@ -25,7 +25,7 @@ const getDefaultPosts = () => getPosts().sort((post1, post2) => post1.id - post2
 
 const getShuflePosts = () => getPosts().sort(() => .5 - Math.random()).slice(0,10) ;
 
-const getDiscussedPosts = () => getPosts().sort((post1, post2) => post1.comments.length - post2.comments.length);
+const getDiscussedPosts = () => getPosts().sort((post1, post2) => post2.comments.length - post1.comments.length);
 
 const updatePosts = (posts) => {
   clearPosts();
