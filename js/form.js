@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import { isEscapeKey } from './util.js';
 import { resetScale } from './scale-picture.js';
 import { resetFilter } from './filters-picture.js';
@@ -40,8 +39,8 @@ const validateHashtags = (textHashtags) => {
   return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length || textHashtags.length === 0;
 };
 
-pristine.addValidator(uploadTextDescription,validateDescription,'До 140 симолов!');
-pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-тегов!');
+pristine.addValidator(uploadTextDescription,validateDescription,'Комментарий до 140 симолов!');
+pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-тегов не выполнено!');
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -70,13 +69,13 @@ const onFormEscKeydown = (evt) => {
   }
 };
 
-const closeFormModal = () => {
+function closeFormModal(){
   document.body.classList.remove('modal-open');
   uploadOverlayForm.classList.add('hidden');
   document.removeEventListener('keydown', onFormEscKeydown);
   uploadForm.reset();
   pristine.reset();
-};
+}
 
 uploadFile.addEventListener('change', () => {
   document.body.classList.add('modal-open');
