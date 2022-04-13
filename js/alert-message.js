@@ -6,21 +6,17 @@ const errorUploadMesageTemplate = document.querySelector('#error').content;
 let errorContainer;
 let successContainer;
 
-const removeOnLoadEscKeydown = () => {
-  document.removeEventListener('keydown', onLoadEscKeydown);
+const onLoadEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    document.removeEventListener('keydown', onLoadEscKeydown);
+  }
 };
 
 const removeLoadMessage = () => {
   successContainer.remove();
-  removeOnLoadEscKeydown();
+  document.removeEventListener('keydown', onLoadEscKeydown);
 };
-
-function onLoadEscKeydown(evt){
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    removeLoadMessage();
-  }
-}
 
 const loadError = (err) => {
   const errorMesage = errorLoadMesageTemplate.cloneNode(true);
@@ -45,6 +41,14 @@ const uploadMessage =  () => {
   document.body.append(message);
 };
 
+const onErrorEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    successContainer.remove();
+    document.removeEventListener('keydown', onErrorEscKeydown);
+  }
+};
+
 const removeModalErrorListeners = () => {
   document.removeEventListener('keydown', onErrorEscKeydown);
 };
@@ -53,13 +57,6 @@ const removeErrorMessage = () => {
   successContainer.remove();
   removeModalErrorListeners();
 };
-
-function onErrorEscKeydown(evt){
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    removeErrorMessage();
-  }
-}
 
 const uploadError = (err) => {
   const message = errorUploadMesageTemplate.cloneNode(true);
