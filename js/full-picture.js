@@ -11,7 +11,10 @@ const renderFullPicture = (posts) => {
   const onPopupEscKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      closeUserModal();
+      document.querySelector('body').classList.remove('modal-open');
+      fullPicture.classList.add('hidden');
+      document.removeEventListener('keydown', onPopupEscKeydown);
+      socialCommentAddButton.removeEventListener('click', handleAddCommentsButton);
     }
   };
 
@@ -20,7 +23,7 @@ const renderFullPicture = (posts) => {
     comment.classList.add('social__comment');
     comment.innerHTML = `<img class="social__picture"
       src="${commentDict.avatar}"
-      alt="${commentDict.userName}"
+      alt="${commentDict.name}"
       width="35" height="35">
       <p class="social__text">${commentDict.message}</p>`;
     return comment;
@@ -54,7 +57,7 @@ const renderFullPicture = (posts) => {
     socialCommentAddButton.addEventListener('click', handleAddCommentsButton);
   };
 
-  function openUserModal(id) {
+  const openUserModal = (id) => {
     const getPost = posts.find((item) => parseInt(item.id, 10) === parseInt(id, 10));
     fullPicture.querySelector('img').src = getPost.url;
     fullPicture.querySelector('.likes-count').textContent = getPost.likes;
@@ -64,14 +67,14 @@ const renderFullPicture = (posts) => {
     document.body.classList.add('modal-open');
     fullPicture.classList.remove('hidden');
     document.addEventListener('keydown', onPopupEscKeydown);
-  }
+  };
 
-  function closeUserModal() {
+  const closeUserModal = () => {
     document.querySelector('body').classList.remove('modal-open');
     fullPicture.classList.add('hidden');
     document.removeEventListener('keydown', onPopupEscKeydown);
     socialCommentAddButton.removeEventListener('click', handleAddCommentsButton);
-  }
+  };
 
   userModalOpenPictures.forEach((userModalOpenPicture) => {
     userModalOpenPicture.addEventListener('click', () => {
