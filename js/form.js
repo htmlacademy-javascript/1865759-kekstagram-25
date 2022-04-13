@@ -34,13 +34,45 @@ const pristine = new Pristine(uploadForm,  {
 const validateDescription = (textDescription) => textDescription.length <= 140;
 
 const validateHashtags = (textHashtags) => {
-  const arrayHashtags = textHashtags.split(' ');
+  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
+  // arrayHashtags.map()
   const re = /^#[A-Za-zА-Яа-яЕё0-9]{1,19}$/;
   return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length || textHashtags.length === 0;
 };
 
+const validateHashtagsLenght = (textHashtags) => {
+  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
+  return arrayHashtags.length < 6;
+};
+
+const validateHashtagsDublicate = (textHashtags) => {
+  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
+  return 0  === arrayHashtags.filter((item, index) => arrayHashtags.indexOf(item) !== index).length;
+};
+
 pristine.addValidator(uploadTextDescription,validateDescription,'Комментарий до 140 симолов!');
-pristine.addValidator(uploadTexthashtags,validateHashtags,'Условия xэш-тегов не выполнено!');
+pristine.addValidator(uploadTexthashtags,validateHashtags,'Xэш-тег должен начинатся с # и не больше 20 символов!');
+pristine.addValidator(uploadTexthashtags,validateHashtagsLenght,'Количество xэш-тегов не должно быть больше 5!');
+pristine.addValidator(uploadTexthashtags,validateHashtagsDublicate,'Одинаковые хэш-теги!');
+
+const onFormEscKeydown = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    document.body.classList.remove('modal-open');
+    uploadOverlayForm.classList.add('hidden');
+    document.removeEventListener('keydown', onFormEscKeydown);
+    uploadForm.reset();
+    pristine.reset();
+  }
+};
+
+const closeFormModal = () => {
+  document.body.classList.remove('modal-open');
+  uploadOverlayForm.classList.add('hidden');
+  document.removeEventListener('keydown', onFormEscKeydown);
+  uploadForm.reset();
+  pristine.reset();
+};
 
 uploadForm.addEventListener('submit', (evt) => {
   evt.preventDefault();
@@ -61,21 +93,6 @@ uploadForm.addEventListener('submit', (evt) => {
     );
   }
 });
-
-const onFormEscKeydown = (evt) => {
-  if (isEscapeKey(evt)) {
-    evt.preventDefault();
-    closeFormModal();
-  }
-};
-
-function closeFormModal(){
-  document.body.classList.remove('modal-open');
-  uploadOverlayForm.classList.add('hidden');
-  document.removeEventListener('keydown', onFormEscKeydown);
-  uploadForm.reset();
-  pristine.reset();
-}
 
 uploadFile.addEventListener('change', () => {
   document.body.classList.add('modal-open');
