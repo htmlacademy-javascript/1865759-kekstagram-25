@@ -3,6 +3,7 @@ import { resetScale } from './scale-picture.js';
 import { resetFilter } from './filters-picture.js';
 import { sendNewPost } from './api.js';
 import { uploadMessage, uploadError } from './alert-message.js';
+import { openModal, closeModal } from './modal-views.js';
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFile = uploadForm.querySelector('#upload-file');
@@ -33,20 +34,24 @@ const pristine = new Pristine(uploadForm,  {
 
 const validateDescription = (textDescription) => textDescription.length <= 140;
 
+const hashtagsToArray = (hashtags) => hashtags
+  .split(' ')
+  .map((hashtag) => hashtag.toLowerCase())
+  .filter((hashtag) => hashtag !== '');
+
 const validateHashtags = (textHashtags) => {
-  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
-  // arrayHashtags.map()
+  const arrayHashtags = hashtagsToArray(textHashtags);
   const re = /^#[A-Za-zА-Яа-яЕё0-9]{1,19}$/;
   return arrayHashtags.length === arrayHashtags.filter((hashTag) => re.test(hashTag)).length || textHashtags.length === 0;
 };
 
 const validateHashtagsLenght = (textHashtags) => {
-  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
+  const arrayHashtags = hashtagsToArray(textHashtags);
   return arrayHashtags.length < 6;
 };
 
 const validateHashtagsDublicate = (textHashtags) => {
-  const arrayHashtags = textHashtags.split(' ').filter((hashtag) => hashtag !== '');
+  const arrayHashtags = hashtagsToArray(textHashtags);
   return 0  === arrayHashtags.filter((item, index) => arrayHashtags.indexOf(item) !== index).length;
 };
 
@@ -58,18 +63,14 @@ pristine.addValidator(uploadTexthashtags,validateHashtagsDublicate,'Одинак
 const onFormEscKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    document.body.classList.remove('modal-open');
-    uploadOverlayForm.classList.add('hidden');
-    document.removeEventListener('keydown', onFormEscKeydown);
+    closeModal(onFormEscKeydown,uploadOverlayForm);
     uploadForm.reset();
     pristine.reset();
   }
 };
 
 const closeFormModal = () => {
-  document.body.classList.remove('modal-open');
-  uploadOverlayForm.classList.add('hidden');
-  document.removeEventListener('keydown', onFormEscKeydown);
+  closeModal(onFormEscKeydown,uploadOverlayForm);
   uploadForm.reset();
   pristine.reset();
 };
@@ -95,13 +96,11 @@ uploadForm.addEventListener('submit', (evt) => {
 });
 
 uploadFile.addEventListener('change', () => {
-  document.body.classList.add('modal-open');
-  uploadOverlayForm.classList.remove('hidden');
+  openModal(onFormEscKeydown,uploadOverlayForm);
   imgUploadPreview.src = URL.createObjectURL(uploadFile.files[0]);
   imgUploadPreviewEffects.forEach((image) => {
     image.style.backgroundImage = `url(${imgUploadPreview.src})`;
   });
-  document.addEventListener('keydown', onFormEscKeydown);
   resetScale();
   resetFilter();
 });
