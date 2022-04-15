@@ -1,7 +1,7 @@
 import { getPosts } from './get-post.js';
 import { renderPosts } from './picture.js';
 import { debounce } from './util.js';
-import { RERENDER_DELAY } from './data.js';
+import { RERENDER_DELAY, POSTS_FILTER_NUMBER, SHUFFLE_CONST } from './data.js';
 
 
 const imgFilters = document.querySelector('.img-filters');
@@ -10,7 +10,9 @@ const filterBtnRandom = document.querySelector('#filter-random');
 const filterBtnDiscussed = document.querySelector('#filter-discussed');
 
 const setActiveBtn = (activeBtn) => {
-  document.querySelector('.img-filters__button--active').classList.remove('img-filters__button--active');
+  document.querySelector('.img-filters__button--active')
+    .classList
+    .remove('img-filters__button--active');
   activeBtn.classList.add('img-filters__button--active');
 };
 
@@ -21,11 +23,15 @@ const clearPosts = () => {
   });
 };
 
-const getDefaultPosts = () => getPosts().sort((post1, post2) => post1.id - post2.id);
+const getDefaultPosts = () => getPosts()
+  .sort((post1, post2) => post1.id - post2.id);
 
-const getShuflePosts = () => getPosts().sort(() => .5 - Math.random()).slice(0,10) ;
+const getShuflePosts = () => getPosts()
+  .sort(() => SHUFFLE_CONST - Math.random())
+  .slice(0,POSTS_FILTER_NUMBER) ;
 
-const getDiscussedPosts = () => getPosts().sort((post1, post2) => post2.comments.length - post1.comments.length);
+const getDiscussedPosts = () => getPosts()
+  .sort((post1, post2) => post2.comments.length - post1.comments.length);
 
 const updatePosts = (posts) => {
   clearPosts();

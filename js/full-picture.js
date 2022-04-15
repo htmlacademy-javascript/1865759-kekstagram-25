@@ -1,19 +1,20 @@
 import { isEscapeKey, isEnterKey } from './util.js';
+import { openModal, closeModal } from './modal-views.js';
+
+const fullPicture = document.querySelector('.big-picture');
+const userModalClosePicture = fullPicture.querySelector('.big-picture__cancel');
+const socialCommentShowCounter = fullPicture.querySelector('.comments-show');
+const socialCommentAddButton = fullPicture.querySelector('.comments-loader');
+let userModalOpenPictures;
+let handleAddCommentsButton;
 
 const renderFullPicture = (posts) => {
-  const fullPicture = document.querySelector('.big-picture');
-  const userModalOpenPictures = document.querySelectorAll('.picture');
-  const userModalClosePicture = fullPicture.querySelector('.big-picture__cancel');
-  const socialCommentShowCounter = fullPicture.querySelector('.comments-show');
-  const socialCommentAddButton = fullPicture.querySelector('.comments-loader');
-  let handleAddCommentsButton;
+  userModalOpenPictures = document.querySelectorAll('.picture');
 
   const onPopupEscKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      document.querySelector('body').classList.remove('modal-open');
-      fullPicture.classList.add('hidden');
-      document.removeEventListener('keydown', onPopupEscKeydown);
+      closeModal(onPopupEscKeydown,fullPicture);
       socialCommentAddButton.removeEventListener('click', handleAddCommentsButton);
     }
   };
@@ -64,16 +65,12 @@ const renderFullPicture = (posts) => {
     fullPicture.querySelector('.comments-count').textContent = getPost.comments.length;
     fullPicture.querySelector('.social__caption').textContent = getPost.description;
     renderCommetsSection(getPost.comments);
-    document.body.classList.add('modal-open');
-    fullPicture.classList.remove('hidden');
-    document.addEventListener('keydown', onPopupEscKeydown);
+    openModal(onPopupEscKeydown,fullPicture);
   };
 
   const closeUserModal = () => {
     document.querySelector('body').classList.remove('modal-open');
-    fullPicture.classList.add('hidden');
-    document.removeEventListener('keydown', onPopupEscKeydown);
-    socialCommentAddButton.removeEventListener('click', handleAddCommentsButton);
+    closeModal(onPopupEscKeydown,fullPicture);
   };
 
   userModalOpenPictures.forEach((userModalOpenPicture) => {
